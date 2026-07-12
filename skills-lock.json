@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "harness-engineering-playbook": {
+      "source": "broomva/harness-engineering",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "0b145cb881dd2f4398c9b161579b38dd12c6d88ccbf4b0a35132b0a5786e66ff"
+    },
+    "seo-meta-tags": {
+      "source": "jeremy0x/meta-tag-boilerplate",
+      "sourceType": "github",
+      "skillPath": "skills/seo-meta-tags/SKILL.md",
+      "computedHash": "9b40485215a2ce1035e9f3ef292e9b873667ed21b0e5458d7683f8925b414577"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "computedHash": "f3bc47f890f42a44db1007ab390709ec368e4b8c089baee6b0007182236ac474"
+    }
+  }
+}
