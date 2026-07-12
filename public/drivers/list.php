@@ -71,8 +71,8 @@ require_once __DIR__ . '/../includes/header.php';
 
     <div class="card border-0 shadow-sm">
         <div class="table-responsive">
-            <table class="table table-striped table-hover align-middle mb-0">
-                <thead class="table-light">
+            <table class="table dashboard-table align-middle mb-0">
+                <thead>
                     <tr>
                         <th>ID</th>
                         <th>Name</th>

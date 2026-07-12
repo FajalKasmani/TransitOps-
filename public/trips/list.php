@@ -46,10 +46,10 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
 
     <!-- Data Table -->
-    <div class="card border-0 shadow-sm mb-4">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
         <div class="table-responsive">
-            <table class="table table-striped table-hover align-middle mb-0">
-                <thead class="table-light">
+            <table class="table dashboard-table align-middle mb-0">
+                <thead>
                     <tr>
                         <th>Trip ID</th>
                         <th>Vehicle</th>

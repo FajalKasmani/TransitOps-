@@ -21,6 +21,107 @@ $userId = $_SESSION['user_id'] ?? 0;
 $pdo = Database::getInstance();
 ?>
 
+<style>
+/* ---------- Dashboard Table ---------- */
+
+.dashboard-table{
+    margin:0;
+    border-collapse:separate;
+    border-spacing:0;
+}
+
+.dashboard-table thead th{
+    padding:16px;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.05rem;
+    font-weight:700;
+    border:none;
+}
+
+.dashboard-table tbody td{
+    padding:16px;
+    border:none;
+    transition:.25s;
+    vertical-align:middle;
+}
+
+.dashboard-table tbody tr{
+    transition:.25s;
+}
+
+.dashboard-table tbody tr:hover{
+    transform:translateY(-2px);
+}
+
+/* Light Theme */
+
+[data-bs-theme="light"] .dashboard-table{
+    background:#fff;
+}
+
+[data-bs-theme="light"] .dashboard-table thead th{
+    background:#f8fafc;
+    color:#475569;
+}
+
+[data-bs-theme="light"] .dashboard-table tbody tr{
+    border-bottom:1px solid #e5e7eb;
+}
+
+[data-bs-theme="light"] .dashboard-table tbody tr:hover{
+    background:#f8fbff;
+}
+
+/* Dark Theme */
+
+[data-bs-theme="dark"] .dashboard-table{
+    background:#0f172a;
+}
+
+[data-bs-theme="dark"] .dashboard-table thead th{
+    background:#1e293b;
+    color:#cbd5e1;
+}
+
+[data-bs-theme="dark"] .dashboard-table tbody td{
+    color:#e2e8f0;
+}
+
+[data-bs-theme="dark"] .dashboard-table tbody tr{
+    border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+[data-bs-theme="dark"] .dashboard-table tbody tr:hover{
+    background:rgba(99,102,241,.08);
+}
+
+/* Status Badge */
+
+.status-badge{
+    padding:7px 14px;
+    border-radius:30px;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.05rem;
+}
+
+/* Avatar */
+
+.avatar-circle{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#4f46e5;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+</style>
+
+
 <div class="container-fluid py-2">
     <div class="d-flex justify-content-between align-items-center mb-4 animate__animated animate__fadeInDown">
         <div>
@@ -250,7 +351,7 @@ $pdo = Database::getInstance();
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle mb-0">
+                <table class="table dashboard-table align-middle mb-0">
                     <thead class="table-light">
                         <tr>
                             <th>Trip ID</th>
