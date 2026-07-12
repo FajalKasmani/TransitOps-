@@ -42,8 +42,13 @@ try {
     }
     
     if (!empty($search)) {
-        $whereClauses[] = "(t.source LIKE :search OR t.destination LIKE :search OR v.vehicle_name LIKE :search OR v.registration_number LIKE :search OR d.name LIKE :search OR t.status LIKE :search)";
-        $params['search'] = '%' . $search . '%';
+        $whereClauses[] = "(t.source LIKE :s1 OR t.destination LIKE :s2 OR v.vehicle_name LIKE :s3 OR v.registration_number LIKE :s4 OR d.name LIKE :s5 OR t.status LIKE :s6)";
+        $params['s1'] = '%' . $search . '%';
+        $params['s2'] = '%' . $search . '%';
+        $params['s3'] = '%' . $search . '%';
+        $params['s4'] = '%' . $search . '%';
+        $params['s5'] = '%' . $search . '%';
+        $params['s6'] = '%' . $search . '%';
     }
     
     $whereSQL = !empty($whereClauses) ? "WHERE " . implode(" AND ", $whereClauses) : "";

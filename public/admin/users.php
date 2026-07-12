@@ -227,10 +227,10 @@ require_once __DIR__ . '/../includes/header.php';
 <!-- Modal: Add User -->
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="background-color: #1e293b; color: #f8fafc; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;">
-            <div class="modal-header border-bottom border-light border-opacity-10">
-                <h5 class="modal-title fw-bold" id="addUserModalLabel">Register New User Account</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-light-theme" id="addUserModalLabel">Register New User Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST" action="users.php" class="needs-validation" novalidate>
                 <div class="modal-body p-4">
@@ -238,36 +238,36 @@ require_once __DIR__ . '/../includes/header.php';
                     <input type="hidden" name="action" value="add">
 
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control bg-transparent text-white" id="modal_full_name" name="full_name" required placeholder="Full Name">
+                        <input type="text" class="form-control" id="modal_full_name" name="full_name" required placeholder="Full Name">
                         <label for="modal_full_name" class="text-muted">Full Name *</label>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control bg-transparent text-white" id="modal_email" name="email" required placeholder="Email Address">
+                        <input type="email" class="form-control" id="modal_email" name="email" required placeholder="Email Address">
                         <label for="modal_email" class="text-muted">Email Address *</label>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <select class="form-select bg-transparent text-white" id="modal_role_id" name="role_id" required style="color-scheme: dark;">
-                            <option value="" style="background-color: #1e293b;">Choose Role...</option>
+                        <select class="form-select" id="modal_role_id" name="role_id" required>
+                            <option value="">Choose Role...</option>
                             <?php foreach ($rolesList as $role): ?>
-                                <option value="<?php echo $role['id']; ?>" style="background-color: #1e293b;"><?php echo strtoupper(str_replace('_', ' ', $role['name'])); ?></option>
+                                <option value="<?php echo $role['id']; ?>"><?php echo strtoupper(str_replace('_', ' ', $role['name'])); ?></option>
                             <?php endforeach; ?>
                         </select>
                         <label for="modal_role_id" class="text-muted">Access Role *</label>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control bg-transparent text-white" id="modal_password" name="password" minlength="6" required placeholder="Password">
+                        <input type="password" class="form-control" id="modal_password" name="password" minlength="6" required placeholder="Password">
                         <label for="modal_password" class="text-muted">Temporary Password (Min 6 chars) *</label>
                     </div>
 
                     <div class="form-floating">
-                        <input type="password" class="form-control bg-transparent text-white" id="modal_confirm_password" name="confirm_password" minlength="6" required placeholder="Confirm Password">
+                        <input type="password" class="form-control" id="modal_confirm_password" name="confirm_password" minlength="6" required placeholder="Confirm Password">
                         <label for="modal_confirm_password" class="text-muted">Confirm Password *</label>
                     </div>
                 </div>
-                <div class="modal-footer border-top border-light border-opacity-10">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 10px;">Cancel</button>
                     <button type="submit" class="btn btn-primary" style="border-radius: 10px;">Create User</button>
                 </div>
@@ -279,10 +279,10 @@ require_once __DIR__ . '/../includes/header.php';
 <!-- Modal: Reset Password -->
 <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="background-color: #1e293b; color: #f8fafc; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;">
-            <div class="modal-header border-bottom border-light border-opacity-10">
-                <h5 class="modal-title fw-bold" id="resetPasswordModalLabel">Reset Credentials</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-light-theme" id="resetPasswordModalLabel">Reset Credentials</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST" action="users.php" class="needs-validation" novalidate>
                 <div class="modal-body p-4">
@@ -292,20 +292,20 @@ require_once __DIR__ . '/../includes/header.php';
 
                     <div class="mb-3">
                         <span class="text-muted small">Account:</span>
-                        <div class="fw-bold" id="reset_user_email_display"></div>
+                        <div class="fw-bold text-light-theme" id="reset_user_email_display"></div>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control bg-transparent text-white" id="reset_new_password" name="new_password" minlength="6" required placeholder="New Password">
+                        <input type="password" class="form-control" id="reset_new_password" name="new_password" minlength="6" required placeholder="New Password">
                         <label for="reset_new_password" class="text-muted">New Password *</label>
                     </div>
 
                     <div class="form-floating">
-                        <input type="password" class="form-control bg-transparent text-white" id="reset_confirm_password" name="confirm_password" minlength="6" required placeholder="Confirm New Password">
+                        <input type="password" class="form-control" id="reset_confirm_password" name="confirm_password" minlength="6" required placeholder="Confirm New Password">
                         <label for="reset_confirm_password" class="text-muted">Confirm New Password *</label>
                     </div>
                 </div>
-                <div class="modal-footer border-top border-light border-opacity-10">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 10px;">Cancel</button>
                     <button type="submit" class="btn btn-warning text-dark fw-bold" style="border-radius: 10px;">Override Password</button>
                 </div>
