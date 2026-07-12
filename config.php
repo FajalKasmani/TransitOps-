@@ -87,5 +87,5 @@ return [
     'base_url' => BASE_URL,
     'session_lifetime' => SESSION_LIFETIME,
     'site_name' => SITE_NAME,
-    'enable_login_lockout' => true, // Set to false to disable login lockout for testing
+    'enable_login_lockout' => false, // Set to false to disable login lockout for testing or true
 ];
