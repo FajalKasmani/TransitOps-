@@ -87,12 +87,12 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="card-header bg-light">
             <ul class="nav nav-tabs card-header-tabs" id="trashTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active fw-semibold text-dark" id="vehicles-tab" data-bs-toggle="tab" data-bs-target="#vehicles" type="button" role="tab" aria-controls="vehicles" aria-selected="true">
+                    <button class="nav-link active fw-semibold" id="vehicles-tab" data-bs-toggle="tab" data-bs-target="#vehicles" type="button" role="tab" aria-controls="vehicles" aria-selected="true">
                         <i class="bi bi-truck me-2"></i>Deleted Vehicles (<?php echo count($deletedVehicles); ?>)
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link fw-semibold text-dark" id="drivers-tab" data-bs-toggle="tab" data-bs-target="#drivers" type="button" role="tab" aria-controls="drivers" aria-selected="false">
+                    <button class="nav-link fw-semibold" id="drivers-tab" data-bs-toggle="tab" data-bs-target="#drivers" type="button" role="tab" aria-controls="drivers" aria-selected="false">
                         <i class="bi bi-person-badge me-2"></i>Deleted Drivers (<?php echo count($deletedDrivers); ?>)
                     </button>
                 </li>
