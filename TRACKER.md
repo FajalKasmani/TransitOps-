@@ -9,9 +9,9 @@ This file tracks our progress through the core modules of the application.
 - [x] **Vehicles** (Management, Capacity/Odometer checks)
 - [x] **Drivers** (Management, Expiry dates, Safety scores)
 - [x] **Trips** (Dispatch, Cargo tracking, Transaction protection)
-- [ ] **Maintenance** (Logs, Statuses)
-- [ ] **Expenses** (Logging, Categorization)
-- [ ] **Reports** (Analytics, Financials, CSV export)
+- [x] **Maintenance** (Logs, Statuses, Auto Vehicle status update)
+- [x] **Expenses** (Fuel, Tolls, and Operations Expense loggers)
+- [x] **Reports** (Analytics, Financials, CSV export)
 
 ---
 
@@ -34,7 +34,7 @@ This file tracks our progress through the core modules of the application.
 - [x] `public/includes/footer.php` - Footer layout with theme-toggle listeners and scripts
 
 ### Phase 3: Dashboards & Real-Time KPIs
-- [x] `api/classes/Reports.php` - Server-side real-time query processor for KPIs, cost metrics, and safety score aggregates
+- [x] `api/classes/Reports.php` - Server-side real-time query processor for KPIs, cost metrics, safety aggregates, and fuel efficiency reports
 - [x] `public/index.php` - Role-customized dashboard (customized for Admin, Fleet Manager, Safety Officer, Financial Analyst, and Driver)
 
 ### Phase 4: Vehicle & Driver Management
@@ -48,3 +48,17 @@ This file tracks our progress through the core modules of the application.
 - [x] `api/classes/Trip.php` - Dispatch processor with capacity checks and transaction-isolated asset status sync
 - [x] `public/trips/list.php`, `add.php`, `edit.php` - Trip schedule log, routing forms, and driver status controllers
 - [x] Redirection - Created legacy root route `public/trips.php`
+
+### Phase 6: Maintenance, Financials, & Reports
+- [x] `api/classes/Maintenance.php` - Maintenance log manager with automatic vehicle shop lock status sync
+- [x] `api/classes/Fuel.php` - Fuel purchase entry service class
+- [x] `api/classes/Expense.php` - General fleet operating expense service class
+- [x] `public/maintenance/list.php`, `add.php`, `edit.php` - Maintenance logs and workflow controls
+- [x] `public/expenses/list.php`, `add_fuel.php`, `add_expense.php` - Financial operations grid and logging forms
+- [x] `public/reports/list.php` - Fleet analytics reports displaying ROI metrics and average fuel efficiency
+- [x] `public/reports/export.php` - Tabular fputcsv() exporter sending efficiency/ROI reports to downloadable CSV files
+- [x] Redirections - Created legacy root routes `public/maintenance.php`, `public/expenses.php`, and `public/reports.php`
+
+### Phase 7: Polish & Email Reminders
+- [x] `api/cron/reminders.php` - Automated driver license expiry alert cron checking licenses expiring in 7 days, sending alerts, and logging compliance events
+- [x] Complete MVP execution verification - Fully tested and verified all status syncs, transactions, calculations, and RBAC visibility controls

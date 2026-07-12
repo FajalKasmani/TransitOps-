@@ -100,7 +100,7 @@ require_once __DIR__ . '/../includes/header.php';
 
                 <!-- Acquisition Cost -->
                 <div class="col-12 col-md-4">
-                    <label for="acquisition_cost" class="form-label fw-semibold text-muted small">Acquisition Cost ($)</label>
+                    <label for="acquisition_cost" class="form-label fw-semibold text-muted small">Acquisition Cost (₹)</label>
                     <input type="number" step="0.01" class="form-control" id="acquisition_cost" name="acquisition_cost" value="0.00" placeholder="e.g. 45000.00" style="border-radius: 10px;">
                 </div>
 

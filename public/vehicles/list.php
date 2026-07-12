@@ -87,7 +87,7 @@ require_once __DIR__ . '/../includes/header.php';
                                 <td style="text-transform: capitalize;"><?php echo htmlspecialchars($v['type'], ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><?php echo number_format((float)$v['max_load_capacity'], 2); ?></td>
                                 <td><?php echo number_format((float)$v['odometer'], 2); ?></td>
-                                <td>$<?php echo number_format((float)$v['acquisition_cost'], 2); ?></td>
+                                <td>₹<?php echo number_format((float)$v['acquisition_cost'], 2); ?></td>
                                 <td>
                                     <?php 
                                         $badgeClass = match($v['status']) {

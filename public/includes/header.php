@@ -260,8 +260,8 @@ $activePage = basename($_SERVER['PHP_SELF']);
             </li>
         <?php endif; ?>
 
-        <?php if (in_array($currentRole, ['admin', 'financial_analyst'], true)): ?>
-            <!-- Reports: Admin, Financial Analyst -->
+        <?php if (in_array($currentRole, ['admin', 'fleet_manager', 'financial_analyst'], true)): ?>
+            <!-- Reports: Admin, Fleet Manager, Financial Analyst -->
             <li class="sidebar-menu-item">
                 <a href="<?php echo $baseUrl; ?>/reports/list.php" class="sidebar-link <?php echo str_starts_with($activePage, 'reports') || str_contains($_SERVER['PHP_SELF'], '/reports/') ? 'active' : ''; ?>">
                     <i class="bi bi-bar-chart-line-fill"></i> Analytics & Reports
