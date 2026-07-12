@@ -313,6 +313,7 @@ $activePage = basename($_SERVER['PHP_SELF']);
                         <div class="small text-muted">Signed in as</div>
                         <div class="fw-bold text-truncate" style="max-width: 180px;"><?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?></div>
                     </li>
+                    <li><a class="dropdown-item py-2 text-light-theme" href="<?php echo $baseUrl; ?>/change_password.php"><i class="bi bi-key me-2"></i> Change Password</a></li>
                     <li><a class="dropdown-item py-2 text-danger" href="<?php echo $baseUrl; ?>/logout.php"><i class="bi bi-box-arrow-right me-2"></i> Log Out</a></li>
                 </ul>
             </div>
