@@ -20,6 +20,9 @@ if (!Auth::enforceTimeout(1800)) {
     exit;
 }
 
+$config = require __DIR__ . '/../../config.php';
+$baseUrl = $config['base_url'] ?? 'http://localhost/TransitOps/public';
+
 $currentRole = $_SESSION['role_name'] ?? '';
 $fullName = $_SESSION['full_name'] ?? 'User';
 $email = $_SESSION['email'] ?? '';
@@ -200,14 +203,14 @@ $activePage = basename($_SERVER['PHP_SELF']);
 <!-- Sidebar Navigation -->
 <div class="sidebar" id="sidebarMenu">
     <div class="sidebar-brand d-flex justify-content-between align-items-center">
-        <a href="index.php" class="brand-logo"><i class="bi bi-speedometer2 me-2"></i>TransitOps</a>
+        <a href="<?php echo $baseUrl; ?>/index.php" class="brand-logo"><i class="bi bi-speedometer2 me-2"></i>TransitOps</a>
         <button class="btn btn-sm d-lg-none text-muted" onclick="toggleSidebar()"><i class="bi bi-x-lg"></i></button>
     </div>
     
     <ul class="sidebar-menu">
         <!-- Dashboard Link: Accessible to all roles -->
         <li class="sidebar-menu-item">
-            <a href="index.php" class="sidebar-link <?php echo $activePage === 'index.php' ? 'active' : ''; ?>">
+            <a href="<?php echo $baseUrl; ?>/index.php" class="sidebar-link <?php echo $activePage === 'index.php' ? 'active' : ''; ?>">
                 <i class="bi bi-grid-1x2-fill"></i> Dashboard
             </a>
         </li>
@@ -215,7 +218,7 @@ $activePage = basename($_SERVER['PHP_SELF']);
         <?php if (in_array($currentRole, ['admin', 'fleet_manager'], true)): ?>
             <!-- Vehicles: Admin and Fleet Manager -->
             <li class="sidebar-menu-item">
-                <a href="vehicles.php" class="sidebar-link <?php echo str_starts_with($activePage, 'vehicles') ? 'active' : ''; ?>">
+                <a href="<?php echo $baseUrl; ?>/vehicles/list.php" class="sidebar-link <?php echo str_starts_with($activePage, 'vehicles') || str_contains($_SERVER['PHP_SELF'], '/vehicles/') ? 'active' : ''; ?>">
                     <i class="bi bi-truck"></i> Vehicles Registry
                 </a>
             </li>
@@ -224,7 +227,7 @@ $activePage = basename($_SERVER['PHP_SELF']);
         <?php if (in_array($currentRole, ['admin', 'fleet_manager', 'safety_officer'], true)): ?>
             <!-- Drivers: Admin, Fleet Manager, Safety Officer -->
             <li class="sidebar-menu-item">
-                <a href="drivers.php" class="sidebar-link <?php echo str_starts_with($activePage, 'drivers') ? 'active' : ''; ?>">
+                <a href="<?php echo $baseUrl; ?>/drivers/list.php" class="sidebar-link <?php echo str_starts_with($activePage, 'drivers') || str_contains($_SERVER['PHP_SELF'], '/drivers/') ? 'active' : ''; ?>">
                     <i class="bi bi-people-fill"></i> Drivers Registry
                 </a>
             </li>
@@ -233,7 +236,7 @@ $activePage = basename($_SERVER['PHP_SELF']);
         <?php if (in_array($currentRole, ['admin', 'fleet_manager', 'driver'], true)): ?>
             <!-- Trips: Admin, Fleet Manager, Driver -->
             <li class="sidebar-menu-item">
-                <a href="trips.php" class="sidebar-link <?php echo str_starts_with($activePage, 'trips') ? 'active' : ''; ?>">
+                <a href="<?php echo $baseUrl; ?>/trips/list.php" class="sidebar-link <?php echo str_starts_with($activePage, 'trips') || str_contains($_SERVER['PHP_SELF'], '/trips/') ? 'active' : ''; ?>">
                     <i class="bi bi-map-fill"></i> Trip Logs
                 </a>
             </li>
@@ -242,7 +245,7 @@ $activePage = basename($_SERVER['PHP_SELF']);
         <?php if (in_array($currentRole, ['admin', 'fleet_manager', 'safety_officer'], true)): ?>
             <!-- Maintenance: Admin, Fleet Manager, Safety Officer -->
             <li class="sidebar-menu-item">
-                <a href="maintenance.php" class="sidebar-link <?php echo str_starts_with($activePage, 'maintenance') ? 'active' : ''; ?>">
+                <a href="<?php echo $baseUrl; ?>/maintenance/list.php" class="sidebar-link <?php echo str_starts_with($activePage, 'maintenance') || str_contains($_SERVER['PHP_SELF'], '/maintenance/') ? 'active' : ''; ?>">
                     <i class="bi bi-wrench-adjustable"></i> Maintenance
                 </a>
             </li>
@@ -251,7 +254,7 @@ $activePage = basename($_SERVER['PHP_SELF']);
         <?php if (in_array($currentRole, ['admin', 'fleet_manager', 'financial_analyst'], true)): ?>
             <!-- Fuel & Expenses: Admin, Fleet Manager, Financial Analyst -->
             <li class="sidebar-menu-item">
-                <a href="expenses.php" class="sidebar-link <?php echo str_starts_with($activePage, 'expenses') ? 'active' : ''; ?>">
+                <a href="<?php echo $baseUrl; ?>/expenses/list.php" class="sidebar-link <?php echo str_starts_with($activePage, 'expenses') || str_contains($_SERVER['PHP_SELF'], '/expenses/') ? 'active' : ''; ?>">
                     <i class="bi bi-wallet2"></i> Fuel & Expenses
                 </a>
             </li>
@@ -260,7 +263,7 @@ $activePage = basename($_SERVER['PHP_SELF']);
         <?php if (in_array($currentRole, ['admin', 'financial_analyst'], true)): ?>
             <!-- Reports: Admin, Financial Analyst -->
             <li class="sidebar-menu-item">
-                <a href="reports.php" class="sidebar-link <?php echo str_starts_with($activePage, 'reports') ? 'active' : ''; ?>">
+                <a href="<?php echo $baseUrl; ?>/reports/list.php" class="sidebar-link <?php echo str_starts_with($activePage, 'reports') || str_contains($_SERVER['PHP_SELF'], '/reports/') ? 'active' : ''; ?>">
                     <i class="bi bi-bar-chart-line-fill"></i> Analytics & Reports
                 </a>
             </li>
@@ -277,7 +280,7 @@ $activePage = basename($_SERVER['PHP_SELF']);
             <h5 class="mb-0 fw-semibold text-light-theme" style="text-transform: capitalize;">
                 <?php 
                     $pageTitle = str_replace(['.php', '_'], ['', ' '], $activePage);
-                    echo htmlspecialchars($pageTitle === 'index' ? 'Dashboard Summary' : $pageTitle);
+                    echo htmlspecialchars($pageTitle === 'index' ? 'Dashboard Summary' : ($pageTitle === 'list' ? 'List Registry' : $pageTitle));
                 ?>
             </h5>
         </div>
@@ -310,7 +313,7 @@ $activePage = basename($_SERVER['PHP_SELF']);
                         <div class="small text-muted">Signed in as</div>
                         <div class="fw-bold text-truncate" style="max-width: 180px;"><?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?></div>
                     </li>
-                    <li><a class="dropdown-item py-2 text-danger" href="logout.php"><i class="bi bi-box-arrow-right me-2"></i> Log Out</a></li>
+                    <li><a class="dropdown-item py-2 text-danger" href="<?php echo $baseUrl; ?>/logout.php"><i class="bi bi-box-arrow-right me-2"></i> Log Out</a></li>
                 </ul>
             </div>
         </div>
