@@ -173,4 +173,23 @@ class Reports {
             return 5.00;
         }
     }
+
+    /**
+     * Fetches vehicles that have high mileage (e.g. >= 10,000 km) and need maintenance alerts.
+     */
+    public static function getPreventativeMaintenanceAlerts(): array {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->query("
+                SELECT v.*, 
+                       (SELECT MAX(date) FROM maintenance_logs WHERE vehicle_id = v.id) as last_maint_date
+                FROM vehicles v
+                WHERE v.is_deleted = 0 AND v.odometer >= 10000.00
+                ORDER BY v.odometer DESC
+            ");
+            return $stmt->fetchAll();
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
 }

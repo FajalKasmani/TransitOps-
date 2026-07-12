@@ -218,4 +218,31 @@ class Driver {
         ");
         return $stmt->fetchAll();
     }
+
+    /**
+     * Restore a soft-deleted driver.
+     *
+     * @param int $id
+     * @return bool
+     */
+    public static function restore(int $id): bool {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("UPDATE drivers SET is_deleted = 0 WHERE id = :id");
+        $success = $stmt->execute(['id' => $id]);
+        if ($success) {
+            self::logAction('drivers', $id, 'RESTORE', "Restored driver profile back to roster");
+        }
+        return $success;
+    }
+
+    /**
+     * Retrieve all soft-deleted drivers.
+     *
+     * @return array
+     */
+    public static function getDeleted(): array {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->query("SELECT * FROM drivers WHERE is_deleted = 1 ORDER BY id DESC");
+        return $stmt->fetchAll();
+    }
 }

@@ -208,4 +208,31 @@ class Vehicle {
         $stmt = $pdo->query("SELECT * FROM vehicles WHERE status = 'available' AND is_deleted = 0 ORDER BY id DESC");
         return $stmt->fetchAll();
     }
+
+    /**
+     * Restore a soft-deleted vehicle.
+     *
+     * @param int $id
+     * @return bool
+     */
+    public static function restore(int $id): bool {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("UPDATE vehicles SET is_deleted = 0 WHERE id = :id");
+        $success = $stmt->execute(['id' => $id]);
+        if ($success) {
+            self::logAction('vehicles', $id, 'RESTORE', "Restored vehicle back to active registry");
+        }
+        return $success;
+    }
+
+    /**
+     * Retrieve all soft-deleted vehicles.
+     *
+     * @return array
+     */
+    public static function getDeleted(): array {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->query("SELECT * FROM vehicles WHERE is_deleted = 1 ORDER BY id DESC");
+        return $stmt->fetchAll();
+    }
 }

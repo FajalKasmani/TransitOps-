@@ -45,9 +45,14 @@ require_once __DIR__ . '/../includes/header.php';
             <p class="text-muted small mb-0">Manage personnel, safety scores, and compliance.</p>
         </div>
         <?php if (in_array($role, ['admin', 'fleet_manager'], true)): ?>
-            <a href="add.php" class="btn btn-primary d-flex align-items-center gap-2">
-                <i class="bi bi-plus-lg"></i> Add Driver
-            </a>
+            <div class="d-flex gap-2">
+                <a href="import.php" class="btn btn-outline-success d-flex align-items-center gap-2">
+                    <i class="bi bi-file-earmark-spreadsheet"></i> Bulk Import CSV
+                </a>
+                <a href="add.php" class="btn btn-primary d-flex align-items-center gap-2">
+                    <i class="bi bi-plus-lg"></i> Add Driver
+                </a>
+            </div>
         <?php endif; ?>
     </div>
 

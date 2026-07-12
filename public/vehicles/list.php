@@ -38,9 +38,14 @@ require_once __DIR__ . '/../includes/header.php';
             <h3 class="fw-bold mb-0 text-light-theme">Vehicles Registry</h3>
             <p class="text-muted small mb-0">Manage and audit fleet vehicles pool.</p>
         </div>
-        <a href="add.php" class="btn btn-primary d-flex align-items-center gap-2">
-            <i class="bi bi-plus-lg"></i> Add Vehicle
-        </a>
+        <div class="d-flex gap-2">
+            <a href="import.php" class="btn btn-outline-success d-flex align-items-center gap-2">
+                <i class="bi bi-file-earmark-spreadsheet"></i> Bulk Import CSV
+            </a>
+            <a href="add.php" class="btn btn-primary d-flex align-items-center gap-2">
+                <i class="bi bi-plus-lg"></i> Add Vehicle
+            </a>
+        </div>
     </div>
 
     <?php if ($successMsg): ?>
@@ -103,6 +108,7 @@ require_once __DIR__ . '/../includes/header.php';
                                 <td><?php echo $v['region'] ? htmlspecialchars($v['region'], ENT_QUOTES, 'UTF-8') : '-'; ?></td>
                                 <td class="text-end">
                                     <div class="d-flex justify-content-end gap-2">
+                                        <a href="documents.php?vehicle_id=<?php echo $v['id']; ?>" class="btn btn-sm btn-outline-info" title="Documents"><i class="bi bi-file-earmark-text"></i> Documents</a>
                                         <a href="edit.php?id=<?php echo $v['id']; ?>" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
                                         <a href="list.php?action=delete&id=<?php echo $v['id']; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this vehicle?');"><i class="bi bi-trash"></i></a>
                                     </div>

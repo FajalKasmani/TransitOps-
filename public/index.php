@@ -48,6 +48,7 @@ $pdo = Database::getInstance();
             LIMIT 5
         ");
         $recentTrips = $tripsStmt->fetchAll();
+        $maintAlerts = Reports::getPreventativeMaintenanceAlerts();
     ?>
         <!-- KPI Cards Grid -->
         <div class="row g-3 mb-4">
@@ -152,6 +153,29 @@ $pdo = Database::getInstance();
                 </div>
             </div>
         </div>
+
+        <!-- Preventative Maintenance Alerts -->
+        <?php if (!empty($maintAlerts)): ?>
+            <div class="alert alert-warning border-0 shadow-sm d-flex flex-column gap-2 mb-4" role="alert" style="border-radius: 12px; background-color: #3b2e11; color: #fef08a;">
+                <div class="d-flex align-items-center gap-2 fw-bold">
+                    <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+                    <span>Preventative Maintenance Alerts</span>
+                </div>
+                <div class="small">
+                    The following vehicles have exceeded the 10,000 km odometer threshold and require preventative service inspections:
+                    <ul class="mb-0 mt-2">
+                        <?php foreach ($maintAlerts as $alertVeh): ?>
+                            <li>
+                                <strong><?php echo htmlspecialchars($alertVeh['vehicle_name'], ENT_QUOTES, 'UTF-8'); ?></strong> 
+                                (<code><?php echo htmlspecialchars($alertVeh['registration_number'], ENT_QUOTES, 'UTF-8'); ?></code>) 
+                                - Current Odometer: <strong><?php echo number_format((float)$alertVeh['odometer'], 2); ?> km</strong>. 
+                                Last Maintenance: <em><?php echo $alertVeh['last_maint_date'] ? htmlspecialchars($alertVeh['last_maint_date'], ENT_QUOTES, 'UTF-8') : 'None'; ?></em>.
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
+        <?php endif; ?>
 
         <!-- Recent Fleet Activity Table -->
         <div class="card border-0 shadow-sm mb-4">
