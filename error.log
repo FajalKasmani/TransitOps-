@@ -1,0 +1,4 @@
+[2026-07-12 12:47:53] Uncaught Exception: Failed opening required 'C:\xampp\htdocs\TransitOps\public/../includes/header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\TransitOps\public\logout.php on line 13
+Stack Trace:
+#0 {main}
+
