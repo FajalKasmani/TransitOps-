@@ -15,7 +15,7 @@ class Fuel {
      * Log fuel actions to the audit trail.
      */
     private static function logAction(string $entity, int $entityId, string $action, string $details = null): void {
-        if (session_status() === PHP_SESSION_NONE) {
+        if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
             session_start();
         }
         $userId = $_SESSION['user_id'] ?? null;
