@@ -40,7 +40,15 @@ class Auth {
         self::startSession();
         $ip = $_SERVER['REMOTE_ADDR'] ?? '';
 
-        if (self::isIpLocked($email, $ip)) {
+        // Check if login lockout is enabled in configurations
+        $configPath = dirname(__DIR__, 2) . '/config.php';
+        $lockoutEnabled = true;
+        if (file_exists($configPath)) {
+            $config = require $configPath;
+            $lockoutEnabled = $config['enable_login_lockout'] ?? true;
+        }
+
+        if ($lockoutEnabled && self::isIpLocked($email, $ip)) {
             throw new \RuntimeException("Too many failed login attempts. This account or IP is temporarily locked for 15 minutes.");
         }
 
