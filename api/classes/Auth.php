@@ -34,9 +34,23 @@ class Auth {
      * @param string $email
      * @param string $password
      * @return bool True if login succeeds, false otherwise
+     * @throws \RuntimeException when authentication is locked or fails
      */
     public static function login(string $email, string $password): bool {
         self::startSession();
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+
+        // Check if login lockout is enabled in configurations
+        $configPath = dirname(__DIR__, 2) . '/config.php';
+        $lockoutEnabled = true;
+        if (file_exists($configPath)) {
+            $config = require $configPath;
+            $lockoutEnabled = $config['enable_login_lockout'] ?? true;
+        }
+
+        if ($lockoutEnabled && self::isIpLocked($email, $ip)) {
+            throw new \RuntimeException("Too many failed login attempts. This account or IP is temporarily locked for 15 minutes.");
+        }
 
         try {
             $pdo = Database::getInstance();
@@ -55,6 +69,9 @@ class Auth {
         $user = $stmt->fetch();
 
         if ($user && password_verify($password, $user['password_hash'])) {
+            // Clear attempts on success
+            self::clearLoginAttempts($email, $ip);
+
             // Regenerate session ID to prevent Session Fixation
             session_regenerate_id(true);
 
@@ -65,6 +82,8 @@ class Auth {
             $_SESSION['role_id'] = (int)$user['role_id'];
             $_SESSION['role_name'] = $user['role_name'];
             $_SESSION['last_activity'] = time();
+            $_SESSION['user_ip'] = $ip;
+            $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
             // Log the login event to action_logs
             try {
@@ -83,7 +102,9 @@ class Auth {
             return true;
         }
 
-        return false;
+        // Record failed attempt and throw exception
+        self::recordLoginAttempt($email, $ip);
+        throw new \RuntimeException("Invalid email or password. Please try again.");
     }
 
     /**
@@ -130,6 +151,22 @@ class Auth {
     }
 
     /**
+     * Validates that the active session matches user IP and browser fingerprint.
+     */
+    public static function validateSession(): bool {
+        self::startSession();
+        if (isset($_SESSION['user_id'])) {
+            $currentIp = $_SERVER['REMOTE_ADDR'] ?? '';
+            $currentAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+            if (($_SESSION['user_ip'] ?? '') !== $currentIp || ($_SESSION['user_agent'] ?? '') !== $currentAgent) {
+                self::logout();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Checks if the logged-in user belongs to one of the allowed roles.
      *
      * @param array $allowed_roles Array of role names permitted to access (e.g. ['admin', 'fleet_manager'])
@@ -137,7 +174,11 @@ class Auth {
      */
     public static function checkAccess(array $allowed_roles): bool {
         self::startSession();
-        
+
+        if (!self::validateSession()) {
+            return false;
+        }
+
         if (!isset($_SESSION['user_id']) || !isset($_SESSION['role_name'])) {
             return false;
         }
@@ -164,5 +205,86 @@ class Auth {
         }
 
         return true;
+    }
+
+    /**
+     * Generates a CSRF token and stores it in the session.
+     */
+    public static function generateCsrfToken(): string {
+        self::startSession();
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['csrf_token'];
+    }
+
+    /**
+     * Verifies the submitted CSRF token against the session.
+     */
+    public static function verifyCsrfToken(?string $token): bool {
+        self::startSession();
+        if (!isset($_SESSION['csrf_token']) || empty($token)) {
+            return false;
+        }
+        return hash_equals($_SESSION['csrf_token'], $token);
+    }
+
+    /**
+     * Renders a hidden CSRF token input field.
+     */
+    public static function getCsrfInput(): string {
+        $token = self::generateCsrfToken();
+        return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($token, ENT_QUOTES, 'UTF-8') . '">';
+    }
+
+    /**
+     * Checks if IP or account is locked due to brute force attempts.
+     */
+    public static function isIpLocked(string $email, string $ip): bool {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare("
+                SELECT COUNT(*) 
+                FROM login_attempts 
+                WHERE (email = :email OR ip_address = :ip)
+                  AND attempt_time > DATE_SUB(NOW(), INTERVAL 15 MINUTE)
+            ");
+            $stmt->execute(['email' => $email, 'ip' => $ip]);
+            return ((int)$stmt->fetchColumn()) >= 5;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Records a failed login attempt in the database.
+     */
+    private static function recordLoginAttempt(string $email, string $ip): void {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare("
+                INSERT INTO login_attempts (email, ip_address) 
+                VALUES (:email, :ip)
+            ");
+            $stmt->execute(['email' => $email, 'ip' => $ip]);
+        } catch (\Exception $e) {
+            // Fail silently
+        }
+    }
+
+    /**
+     * Clears all failed login attempts for an email/IP after a successful login.
+     */
+    private static function clearLoginAttempts(string $email, string $ip): void {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare("
+                DELETE FROM login_attempts 
+                WHERE email = :email OR ip_address = :ip
+            ");
+            $stmt->execute(['email' => $email, 'ip' => $ip]);
+        } catch (\Exception $e) {
+            // Fail silently
+        }
     }
 }

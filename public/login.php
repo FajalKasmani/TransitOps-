@@ -19,13 +19,21 @@ $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'] ?? '';
+    $csrfToken = $_POST['csrf_token'] ?? '';
 
     if ($email && $password) {
-        if (Auth::login($email, $password)) {
-            header("Location: index.php");
-            exit;
-        } else {
-            $error = "Invalid email or password. Please try again.";
+        try {
+            if (!Auth::verifyCsrfToken($csrfToken)) {
+                throw new RuntimeException("Invalid CSRF token. Request verification failed.");
+            }
+            if (Auth::login($email, $password)) {
+                header("Location: index.php");
+                exit;
+            } else {
+                $error = "Invalid email or password. Please try again.";
+            }
+        } catch (RuntimeException $e) {
+            $error = $e->getMessage();
         }
     } else {
         $error = "Please fill in all fields.";
@@ -259,8 +267,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
 
+
         <form method="POST" action="login.php" id="loginForm" class="needs-validation" novalidate>
-            
+    
+        <form method="POST" action="login.php" class="needs-validation" novalidate>
+            <?php echo Api\Classes\Auth::getCsrfInput(); ?>
+
             <div class="mb-3">
                 <label for="email" class="form-label text-secondary small fw-semibold mb-2">Email Address</label>
                 <div class="input-group-custom">

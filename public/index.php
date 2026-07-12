@@ -48,6 +48,7 @@ $pdo = Database::getInstance();
             LIMIT 5
         ");
         $recentTrips = $tripsStmt->fetchAll();
+        $maintAlerts = Reports::getPreventativeMaintenanceAlerts();
     ?>
         <!-- KPI Cards Grid -->
         <div class="row g-3 mb-4">
@@ -145,13 +146,36 @@ $pdo = Database::getInstance();
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
                             <span class="text-muted small d-block">Total Operational Cost</span>
-                            <span class="fs-4 fw-bold">$<?php echo number_format($kpis['total_operational_cost'], 2); ?></span>
+                            <span class="fs-4 fw-bold">₹<?php echo number_format($kpis['total_operational_cost'], 2); ?></span>
                         </div>
                         <span class="badge bg-danger rounded-pill p-2"><i class="bi bi-currency-dollar fs-4"></i></span>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Preventative Maintenance Alerts -->
+        <?php if (!empty($maintAlerts)): ?>
+            <div class="alert alert-warning border-0 shadow-sm d-flex flex-column gap-2 mb-4" role="alert" style="border-radius: 12px; background-color: #3b2e11; color: #fef08a;">
+                <div class="d-flex align-items-center gap-2 fw-bold">
+                    <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+                    <span>Preventative Maintenance Alerts</span>
+                </div>
+                <div class="small">
+                    The following vehicles have exceeded the 10,000 km odometer threshold and require preventative service inspections:
+                    <ul class="mb-0 mt-2">
+                        <?php foreach ($maintAlerts as $alertVeh): ?>
+                            <li>
+                                <strong><?php echo htmlspecialchars($alertVeh['vehicle_name'], ENT_QUOTES, 'UTF-8'); ?></strong> 
+                                (<code><?php echo htmlspecialchars($alertVeh['registration_number'], ENT_QUOTES, 'UTF-8'); ?></code>) 
+                                - Current Odometer: <strong><?php echo number_format((float)$alertVeh['odometer'], 2); ?> km</strong>. 
+                                Last Maintenance: <em><?php echo $alertVeh['last_maint_date'] ? htmlspecialchars($alertVeh['last_maint_date'], ENT_QUOTES, 'UTF-8') : 'None'; ?></em>.
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
+        <?php endif; ?>
 
         <!-- Recent Fleet Activity Table -->
         <div class="card border-0 shadow-sm mb-4">
@@ -360,7 +384,7 @@ $pdo = Database::getInstance();
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-uppercase mb-1 small fw-semibold text-muted">Total Cost</h6>
-                                <h3 class="mb-0 fw-bold">$<?php echo number_format($totalCost, 2); ?></h3>
+                                <h3 class="mb-0 fw-bold">₹<?php echo number_format($totalCost, 2); ?></h3>
                             </div>
                             <div class="fs-1"><i class="bi bi-cash-stack"></i></div>
                         </div>
@@ -375,7 +399,7 @@ $pdo = Database::getInstance();
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-uppercase mb-1 small fw-semibold text-muted">Fuel Expenses</h6>
-                                <h3 class="mb-0 fw-bold">$<?php echo number_format($fuelCost, 2); ?></h3>
+                                <h3 class="mb-0 fw-bold">₹<?php echo number_format($fuelCost, 2); ?></h3>
                             </div>
                             <div class="fs-1"><i class="bi bi-fuel-pump"></i></div>
                         </div>
@@ -390,7 +414,7 @@ $pdo = Database::getInstance();
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-uppercase mb-1 small fw-semibold text-muted">Maintenance Cost</h6>
-                                <h3 class="mb-0 fw-bold">$<?php echo number_format($maintCost, 2); ?></h3>
+                                <h3 class="mb-0 fw-bold">₹<?php echo number_format($maintCost, 2); ?></h3>
                             </div>
                             <div class="fs-1"><i class="bi bi-tools"></i></div>
                         </div>
@@ -405,7 +429,7 @@ $pdo = Database::getInstance();
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-uppercase mb-1 small fw-semibold text-muted">Other Expenses</h6>
-                                <h3 class="mb-0 fw-bold">$<?php echo number_format($expenseCost, 2); ?></h3>
+                                <h3 class="mb-0 fw-bold">₹<?php echo number_format($expenseCost, 2); ?></h3>
                             </div>
                             <div class="fs-1"><i class="bi bi-ticket-perforated"></i></div>
                         </div>
@@ -445,12 +469,12 @@ $pdo = Database::getInstance();
                                         <strong><?php echo htmlspecialchars($v['vehicle_name'], ENT_QUOTES, 'UTF-8'); ?></strong>
                                         <span class="text-muted d-block small"><?php echo htmlspecialchars($v['registration_number'], ENT_QUOTES, 'UTF-8'); ?></span>
                                     </td>
-                                    <td>$<?php echo number_format((float)$v['acquisition_cost'], 2); ?></td>
-                                    <td>$<?php echo number_format((float)$v['fuel_cost'], 2); ?></td>
-                                    <td>$<?php echo number_format((float)$v['maintenance_cost'], 2); ?></td>
-                                    <td>$<?php echo number_format((float)$v['expense_cost'], 2); ?></td>
-                                    <td><strong class="text-danger">$<?php echo number_format((float)$v['total_cost'], 2); ?></strong></td>
-                                    <td class="text-success">$<?php echo number_format((float)$v['calculated_revenue'], 2); ?></td>
+                                    <td>₹<?php echo number_format((float)$v['acquisition_cost'], 2); ?></td>
+                                    <td>₹<?php echo number_format((float)$v['fuel_cost'], 2); ?></td>
+                                    <td>₹<?php echo number_format((float)$v['maintenance_cost'], 2); ?></td>
+                                    <td>₹<?php echo number_format((float)$v['expense_cost'], 2); ?></td>
+                                    <td><strong class="text-danger">₹<?php echo number_format((float)$v['total_cost'], 2); ?></strong></td>
+                                    <td class="text-success">₹<?php echo number_format((float)$v['calculated_revenue'], 2); ?></td>
                                     <td>
                                         <span class="badge <?php echo $v['roi'] >= 0 ? 'bg-success' : 'bg-danger'; ?>">
                                             <?php echo number_format($v['roi'], 2); ?>%

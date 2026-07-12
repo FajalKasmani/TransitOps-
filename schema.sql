@@ -2,6 +2,7 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS action_logs;
+DROP TABLE IF EXISTS login_attempts;
 DROP TABLE IF EXISTS vehicle_documents;
 DROP TABLE IF EXISTS expenses;
 DROP TABLE IF EXISTS fuel_logs;
@@ -176,6 +177,15 @@ CREATE TABLE action_logs (
     INDEX idx_audit_user (user_id),
     INDEX idx_audit_entity (entity, entity_id),
     INDEX idx_audit_timestamp (timestamp)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 11. login_attempts table
+CREATE TABLE login_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    attempt_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_login_attempts_lookup (email, ip_address, attempt_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Seed data for roles

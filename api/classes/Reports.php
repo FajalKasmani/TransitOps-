@@ -124,6 +124,41 @@ class Reports {
     }
 
     /**
+     * Calculate fuel efficiency (km/L) per vehicle.
+     *
+     * @return array
+     */
+    public static function getFuelEfficiencyReport(): array {
+        try {
+            $pdo = Database::getInstance();
+        } catch (RuntimeException $e) {
+            return [];
+        }
+
+        $sql = "
+            SELECT 
+                v.id,
+                v.registration_number,
+                v.vehicle_name,
+                COALESCE((SELECT SUM(actual_distance) FROM trips WHERE vehicle_id = v.id AND status = 'completed'), 0) as total_distance,
+                COALESCE((SELECT SUM(liters) FROM fuel_logs WHERE vehicle_id = v.id), 0) as total_liters
+            FROM vehicles v
+            WHERE v.is_deleted = 0
+        ";
+
+        $stmt = $pdo->query($sql);
+        $records = $stmt->fetchAll();
+
+        foreach ($records as &$r) {
+            $distance = (float)$r['total_distance'];
+            $liters = (float)$r['total_liters'];
+            $r['efficiency'] = $liters > 0 ? round($distance / $liters, 2) : 0.00;
+        }
+
+        return $records;
+    }
+
+    /**
      * Calculate and return average safety score of on-duty drivers.
      *
      * @return float
@@ -136,6 +171,25 @@ class Reports {
             return $score !== null ? round((float)$score, 2) : 5.00;
         } catch (\Exception $e) {
             return 5.00;
+        }
+    }
+
+    /**
+     * Fetches vehicles that have high mileage (e.g. >= 10,000 km) and need maintenance alerts.
+     */
+    public static function getPreventativeMaintenanceAlerts(): array {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->query("
+                SELECT v.*, 
+                       (SELECT MAX(date) FROM maintenance_logs WHERE vehicle_id = v.id) as last_maint_date
+                FROM vehicles v
+                WHERE v.is_deleted = 0 AND v.odometer >= 10000.00
+                ORDER BY v.odometer DESC
+            ");
+            return $stmt->fetchAll();
+        } catch (\Exception $e) {
+            return [];
         }
     }
 }
