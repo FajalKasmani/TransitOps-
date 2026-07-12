@@ -268,6 +268,21 @@ $activePage = basename($_SERVER['PHP_SELF']);
                 </a>
             </li>
         <?php endif; ?>
+
+        <?php if ($currentRole === 'admin'): ?>
+            <!-- Admin Settings & Management -->
+            <li class="sidebar-menu-item-header text-uppercase text-muted px-4 mt-3 mb-1" style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05rem; list-style-type: none;">Administration</li>
+            <li class="sidebar-menu-item">
+                <a href="<?php echo $baseUrl; ?>/admin/users.php" class="sidebar-link <?php echo str_contains($_SERVER['PHP_SELF'], '/admin/users.php') ? 'active' : ''; ?>">
+                    <i class="bi bi-people"></i> User Management
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="<?php echo $baseUrl; ?>/admin/trash.php" class="sidebar-link <?php echo str_contains($_SERVER['PHP_SELF'], '/admin/trash.php') ? 'active' : ''; ?>">
+                    <i class="bi bi-trash"></i> Trash Recovery
+                </a>
+            </li>
+        <?php endif; ?>
     </ul>
 </div>
 
@@ -313,6 +328,7 @@ $activePage = basename($_SERVER['PHP_SELF']);
                         <div class="small text-muted">Signed in as</div>
                         <div class="fw-bold text-truncate" style="max-width: 180px;"><?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?></div>
                     </li>
+                    <li><a class="dropdown-item py-2 text-light-theme" href="<?php echo $baseUrl; ?>/change_password.php"><i class="bi bi-key me-2"></i> Change Password</a></li>
                     <li><a class="dropdown-item py-2 text-danger" href="<?php echo $baseUrl; ?>/logout.php"><i class="bi bi-box-arrow-right me-2"></i> Log Out</a></li>
                 </ul>
             </div>

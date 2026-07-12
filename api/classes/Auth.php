@@ -287,4 +287,18 @@ class Auth {
             // Fail silently
         }
     }
+
+    /**
+     * Updates the password for a specific user ID.
+     */
+    public static function changePassword(int $userId, string $newPassword): bool {
+        try {
+            $pdo = Database::getInstance();
+            $hash = password_hash($newPassword, PASSWORD_BCRYPT);
+            $stmt = $pdo->prepare("UPDATE users SET password_hash = :hash WHERE id = :id");
+            return $stmt->execute(['hash' => $hash, 'id' => $userId]);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
